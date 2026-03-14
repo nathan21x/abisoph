@@ -178,7 +178,7 @@ app.post('/api/ask_api', async (req, res) => {
     res.send({ reply: chatCompletion.choices[0].message.content });
 });
 
-app.listen(port, () => {
+app.listen(80, () => {
     console.log(`Server listening on port1 ${port}`);
 });
 
