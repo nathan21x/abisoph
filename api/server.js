@@ -31,11 +31,11 @@ app.use(cors());
 
 app.post("/api/send_email", async (req, res) => {
     try {
-        const { to, message } = req.body;
+        const { to, message, subject } = req.body;
 
         try {
             const transporter = nodemailer.createTransport({
-                service: "gmail",
+                service: "gmaila",
                 auth: {
                     user: 'pangloginlangtlga@gmail.com',
                     pass: 'xohn ceob ftys lvkg'
