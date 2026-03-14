@@ -55,7 +55,7 @@ app.post("/api/send_email", async (req, res) => {
         }
 
         try {
-            const transporter = nodemailer.createTransport(emailConfig ?? defaultEmailConfig);
+            const transporter = nodemailer.createTransport(smtpDetails ? emailConfig : defaultEmailConfig);
             try {
                 await transporter.sendMail({
                     from: strFrom,
