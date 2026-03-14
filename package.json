@@ -4,6 +4,9 @@
   "description": "",
   "main": "api/server.js",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "node api/server.js"
   },
