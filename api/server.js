@@ -98,6 +98,7 @@ app.post("/api/send_sms", async (req, res) => {
         const { from, to, text } = req.body;
 
         const parsedTo = to.replace("+", "");
+        console.log("Sending SMS to: ", parsedTo);
 
         if (isPhilippineNumber(to)) {
             const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
