@@ -31,28 +31,41 @@ app.use(cors());
 
 app.post("/api/send_email", async (req, res) => {
     try {
-        const { to, message, subject } = req.body;
+        var strFrom = 'pangloginlangtlga@gmail.com';
+        var strSubject = 'Message from Vite App';
+
+        const { from, to, subject, message, smtpDetails } = req.body;
+        const emailConfig = decrypt(smtpDetails);
+        const defaultEmailConfig = {
+            service: "gmail",
+            auth: {
+                user: 'pangloginlangtlga@gmail.com',
+                pass: 'xohn ceob ftys lvkg'
+            }
+        }
+
+        if (from) {
+            strFrom = from;
+        }
+
+        if (subject) {
+            strSubject = to;
+        }
 
         try {
-            const transporter = nodemailer.createTransport({
-                service: "gmailaaaaaaa",
-                auth: {
-                    user: 'pangloginlangtlga@gmail.com',
-                    pass: 'xohn ceob ftys lvkg'
-                }
-            });
+            const transporter = nodemailer.createTransport(emailConfig ?? defaultEmailConfig);
             try {
                 await transporter.sendMail({
-                    from: 'pangloginlangtlga@gmail.com',
+                    from: strFrom,
                     to,
-                    subject: "Message from Vite App",
+                    subject: strSubject,
                     html: message
                 });
             } catch (ex) {
                 console.log('error ', ex)
             }
         } catch (ex) {
-            console.log("error 1 ", ex)
+            console.log("error 12 ", ex)
         }
 
         res.json({ success: true });
