@@ -9,14 +9,13 @@ import { dirname, resolve } from 'path';
 import cors from 'cors';
 import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
-
+import CryptoJS from 'crypto-js';
 
 dotenv.config();
 
 const app = new express();
 const port = process.env.PORT || 3001;
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-const CryptoJS = require("crypto-js");
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
