@@ -1,4 +1,4 @@
-export function isPhilippineNumber(number) {
+export default function isPhilippineNumber(number) {
     number = number.replace(/\s|-/g, "");
 
     return (
