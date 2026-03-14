@@ -11,6 +11,7 @@ import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
 import CryptoJS from 'crypto-js';
 import { Vonage } from '@vonage/server-sdk';
+import { isPhilippineNumber } from './utils';
 
 dotenv.config();
 
@@ -86,22 +87,39 @@ app.post("/api/send_sms", async (req, res) => {
     try {
         const { from, to, text } = req.body;
 
-        try {
-            await vonage.sms.send({ to, from, text })
-                .then(resp => { console.log('Message sent successfully'); console.log(resp); })
-                .catch(err => {
-                    console.log('There was an error sending the messages.');
-                    try {
+        to = to.replace("+", "");
 
-                    } catch (ex) {
-                        console.log('error ', ex)
-                    }
+        if (isPhilippineNumber(to)) {
+            const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa ",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    recipient: to,
+                    sender_id: from,
+                    type: "plain",
+                    message: text
                 })
-        } catch (ex) {
-            console.log("error 12 ", ex)
+            });
+            const data = await response.json();
+            res.json({ success: true, response: data });
+        } else {
+            try {
+                await vonage.sms.send({ to, from, text })
+                    .then(resp => { console.log('Message sent successfully'); console.log(resp); })
+                    .catch(err => {
+                        console.log('There was an error sending the messages.', res);
+                    })
+            } catch (ex) {
+                console.log("error ", ex)
+            }
         }
 
-        res.json({ success: true });
+
+        res.json({ success: true, response: res });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
