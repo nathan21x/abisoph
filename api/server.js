@@ -118,7 +118,7 @@ app.post("/api/send_sms", async (req, res) => {
                 });
 
                 const data = await response.json();
-
+                console.log("SMS API Response:", data);
                 // Add a return here to stop execution immediately
                 return res.json({ success: true, response: data });
 
