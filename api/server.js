@@ -84,9 +84,7 @@ app.post("/api/send_email", async (req, res) => {
 
 app.post("/api/send_sms", async (req, res) => {
     try {
-        const from = "Vonage APIs"
-        const to = "639759172591"
-        const text = 'A text message sent using the Vonage SMS API'
+        const { from, to, text } = req.body;
 
         try {
             await vonage.sms.send({ to, from, text })
