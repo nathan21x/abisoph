@@ -97,7 +97,7 @@ app.post("/api/send_sms", async (req, res) => {
     try {
         const { from, to, text } = req.body;
 
-        to = to.replace("+", "");
+        const parsedTo = to.replace("+", "");
 
         if (isPhilippineNumber(to)) {
             const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
@@ -108,7 +108,7 @@ app.post("/api/send_sms", async (req, res) => {
                     "Accept": "application/json"
                 },
                 body: JSON.stringify({
-                    recipient: to,
+                    recipient: parsedTo,
                     sender_id: from,
                     type: "plain",
                     message: text
