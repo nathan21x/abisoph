@@ -10,12 +10,17 @@ import cors from 'cors';
 import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
 import CryptoJS from 'crypto-js';
+import { Vonage } from '@vonage/server-sdk';
 
 dotenv.config();
 
 const app = new express();
 const port = process.env.PORT || 3001;
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const vonage = new Vonage({
+    apiKey: "5a5afea5",
+    apiSecret: "v2GFDiIKmiiymuCF" // if you want to manage your secret, please do so by visiting your API Settings page in your dashboard
+})
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
@@ -66,6 +71,34 @@ app.post("/api/send_email", async (req, res) => {
             } catch (ex) {
                 console.log('error ', ex)
             }
+        } catch (ex) {
+            console.log("error 12 ", ex)
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+
+app.post("/api/send_sms", async (req, res) => {
+    try {
+        const from = "Vonage APIs"
+        const to = "639759172591"
+        const text = 'A text message sent using the Vonage SMS API'
+
+        try {
+            await vonage.sms.send({ to, from, text })
+                .then(resp => { console.log('Message sent successfully'); console.log(resp); })
+                .catch(err => {
+                    console.log('There was an error sending the messages.');
+                    try {
+
+                    } catch (ex) {
+                        console.log('error ', ex)
+                    }
+                })
         } catch (ex) {
             console.log("error 12 ", ex)
         }
