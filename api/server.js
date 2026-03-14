@@ -37,7 +37,7 @@ decrypt = (str) => {
 app.post("/api/send_email", async (req, res) => {
     try {
         var strFrom = 'pangloginlangtlga@gmail.com';
-        var strSubject = 'Message from Vite App';
+        var strSubject = 'Message from sVite App';
 
         const { from, to, subject, message, smtpDetails } = req.body;
         const emailConfig = decrypt(smtpDetails);
