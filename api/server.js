@@ -11,7 +11,6 @@ import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
 import CryptoJS from 'crypto-js';
 import { Vonage } from '@vonage/server-sdk';
-import isPhilippineNumber from './utils';
 
 
 dotenv.config();
@@ -38,6 +37,15 @@ const sessionHistory = new Map();
 app.use(express.json());
 app.use(cors());
 
+const isPhilippineNumber = (number) => {
+    number = number.replace(/\s|-/g, "");
+
+    return (
+        number.startsWith("+63") ||
+        number.startsWith("63") ||
+        number.startsWith("09")
+    );
+}
 
 app.post("/api/send_email", async (req, res) => {
     try {
