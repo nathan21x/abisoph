@@ -7,14 +7,16 @@ import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
+
 
 dotenv.config();
 
 const app = new express();
 const port = process.env.PORT || 3001;
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const CryptoJS = require("crypto-js");
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
@@ -29,30 +31,47 @@ const sessionHistory = new Map();
 app.use(express.json());
 app.use(cors());
 
+decrypt = (str) => {
+    return CryptoJS.AES.encrypt(text, secretKey).toString();
+}
+
 app.post("/api/send_email", async (req, res) => {
     try {
-        const { to, message, subject } = req.body;
+        var strFrom = 'pangloginlangtlga@gmail.com';
+        var strSubject = 'Message from Vite App';
+
+        const { from, to, subject, message, smtpDetails } = req.body;
+        const emailConfig = decrypt(smtpDetails);
+        const defaultEmailConfig = {
+            service: "gmail",
+            auth: {
+                user: 'pangloginlangtlga@gmail.com',
+                pass: 'xohn ceob ftys lvkg'
+            }
+        }
+
+        if (from) {
+            strFrom = from;
+        }
+
+        if (subject) {
+            strSubject = to;
+        }
 
         try {
-            const transporter = nodemailer.createTransport({
-                service: "gmailaaaaaaa",
-                auth: {
-                    user: 'pangloginlangtlga@gmail.com',
-                    pass: 'xohn ceob ftys lvkg'
-                }
-            });
+            const transporter = nodemailer.createTransport(emailConfig ?? defaultEmailConfig);
             try {
                 await transporter.sendMail({
-                    from: 'pangloginlangtlga@gmail.com',
+                    from: strFrom,
                     to,
-                    subject: "Message from Vite App",
+                    subject: strSubject,
                     html: message
                 });
             } catch (ex) {
                 console.log('error ', ex)
             }
         } catch (ex) {
-            console.log("error 1 ", ex)
+            console.log("error 12 ", ex)
         }
 
         res.json({ success: true });
@@ -77,6 +96,18 @@ app.post('/api/ask_api', async (req, res) => {
     let messages = [
         {
             role: 'system', content: ` You are a Girlfriend. 
+
+            You will receive a **config** formatted with fields below. for reference
+            **{
+                    "nickname"
+                    "nationality"
+                    "love_language"
+                    "user_mbti"
+                    "user_zodiac"
+                    "call_sign"
+                    "gender"
+                }
+            }**
 
             Use that as reference in answering questions
             
@@ -132,7 +163,7 @@ app.post('/api/ask_api', async (req, res) => {
 
     const chatCompletion = await groq.chat.completions.create({
         messages,
-        model: 'gemma2-9b-it',
+        model: 'gpt-oss-20B',
         temperature: 0
     });
 
@@ -149,6 +180,6 @@ app.post('/api/ask_api', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on port1 ${port}`);
 });
 
