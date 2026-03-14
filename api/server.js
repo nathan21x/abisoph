@@ -32,15 +32,12 @@ app.use(cors());
 
 
 app.post("/api/send_email", async (req, res) => {
-    decrypt = (str) => {
-        return CryptoJS.AES.encrypt(text, secretKey).toString();
-    }
     try {
         var strFrom = 'pangloginlangtlga@gmail.com';
         var strSubject = 'Message from sVitae App';
 
         const { from, to, subject, message, smtpDetails } = req.body;
-        const emailConfig = decrypt(smtpDetails);
+        const emailConfig = CryptoJS.AES.encrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString();
         const defaultEmailConfig = {
             service: "gmail",
             auth: {
