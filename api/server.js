@@ -11,7 +11,7 @@ import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
 import CryptoJS from 'crypto-js';
 import { Vonage } from '@vonage/server-sdk';
-import { isPhilippineNumber } from './utils';
+import isPhilippineNumber from './utils';
 
 
 dotenv.config();
