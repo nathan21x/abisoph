@@ -96,6 +96,7 @@ app.post("/api/send_email", async (req, res) => {
 app.post("/api/send_sms", async (req, res) => {
     try {
         const { from, to, text } = req.body;
+        console.log("SMS Payload ", req.body);
 
         const parsedTo = to.replace("+", "");
         console.log("Sending SMS to: ", parsedTo);
