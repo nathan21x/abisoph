@@ -30,11 +30,11 @@ const sessionHistory = new Map();
 app.use(express.json());
 app.use(cors());
 
-decrypt = (str) => {
-    return CryptoJS.AES.encrypt(text, secretKey).toString();
-}
 
 app.post("/api/send_email", async (req, res) => {
+    decrypt = (str) => {
+        return CryptoJS.AES.encrypt(text, secretKey).toString();
+    }
     try {
         var strFrom = 'pangloginlangtlga@gmail.com';
         var strSubject = 'Message from sVite App';
