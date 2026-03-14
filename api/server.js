@@ -37,7 +37,7 @@ const sessionHistory = new Map();
 app.use(express.json());
 app.use(cors());
 
-const isPhilippineNumber = (number) => {
+function isPhilippineNumber(number) {
     number = number.replace(/\s|-/g, "");
 
     return (
