@@ -11,7 +11,7 @@ import dotenv, { decrypt } from 'dotenv';
 import nodemailer from 'nodemailer';
 import CryptoJS from 'crypto-js';
 import { Vonage } from '@vonage/server-sdk';
-import { isPhilippineNumber } from './utils';
+
 
 dotenv.config();
 
@@ -22,6 +22,7 @@ const vonage = new Vonage({
     apiKey: "5a5afea5",
     apiSecret: "v2GFDiIKmiiymuCF" // if you want to manage your secret, please do so by visiting your API Settings page in your dashboard
 })
+const { isPhilippineNumber } = require('./utils');
 
 // 🌐 Polyfill for OpenAI SDK
 globalThis.fetch = fetch;
