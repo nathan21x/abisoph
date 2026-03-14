@@ -101,22 +101,35 @@ app.post("/api/send_sms", async (req, res) => {
         console.log("Sending SMS to: ", parsedTo);
 
         if (isPhilippineNumber(to)) {
-            const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa ",
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    recipient: parsedTo,
-                    sender_id: from,
-                    type: "plain",
-                    message: text
-                })
-            });
-            const data = await response.json();
-            res.json({ success: true, response: data });
+            try {
+                const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa",
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        recipient: parsedTo,
+                        sender_id: from,
+                        type: "plain",
+                        message: text
+                    })
+                });
+
+                const data = await response.json();
+
+                // Add a return here to stop execution immediately
+                return res.json({ success: true, response: data });
+
+            } catch (error) {
+                console.error("SMS Error:", error);
+
+                // Check if headers were already sent before sending an error response
+                if (!res.headersSent) {
+                    return res.status(500).json({ success: false, error: error.message });
+                }
+            }
         } else {
             try {
                 await vonage.sms.send({ to, from, text })
