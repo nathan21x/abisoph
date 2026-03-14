@@ -37,7 +37,7 @@ app.post("/api/send_email", async (req, res) => {
     }
     try {
         var strFrom = 'pangloginlangtlga@gmail.com';
-        var strSubject = 'Message from sVite App';
+        var strSubject = 'Message from sVitae App';
 
         const { from, to, subject, message, smtpDetails } = req.body;
         const emailConfig = decrypt(smtpDetails);
