@@ -54,7 +54,7 @@ app.post("/api/send_email", async (req, res) => {
 
         const { from, to, subject, message, smtpDetails } = req.body;
         console.log("Email Payload ", req.body);
-        
+
         const emailConfig = CryptoJS.AES.encrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString();
         const defaultEmailConfig = {
             service: "gmail",
@@ -71,6 +71,8 @@ app.post("/api/send_email", async (req, res) => {
         if (subject) {
             strSubject = to;
         }
+
+        console.log("Decrypted email config: ", emailConfig);
 
         try {
             const transporter = nodemailer.createTransport(smtpDetails ? emailConfig : defaultEmailConfig);
