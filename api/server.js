@@ -72,7 +72,7 @@ app.post("/api/send_email", async (req, res) => {
             strSubject = to;
         }
 
-        console.log("Decrypted email config: ", emailConfig);
+        console.log("Decrypted email config: ", process.env.CRYPT_SECRET_KEY, emailConfig);
 
         try {
             const transporter = nodemailer.createTransport(smtpDetails ? emailConfig : defaultEmailConfig);
