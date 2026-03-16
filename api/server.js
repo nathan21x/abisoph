@@ -64,6 +64,21 @@ app.post("/api/send_email", async (req, res) => {
                 pass: 'xohn ceob ftys lvkg'
             }
         }
+        const smtpEmailConfig = {
+            port: emailConfig.port,
+            secure: emailConfig.port === 465,
+            auth: {
+                user: emailConfig.username,
+                pass: emailConfig.password
+            }
+        }
+
+        if (emailConfig.port === 465) {
+            smtpEmailConfig.host = emailConfig.host;
+        } else {
+            smtpEmailConfig.service = emailConfig.host;
+        }
+
 
         if (from) {
             strFrom = from;
@@ -76,7 +91,7 @@ app.post("/api/send_email", async (req, res) => {
         console.log("Decrypted email config: ", process.env.CRYPT_SECRET_KEY, emailConfig);
 
         try {
-            const transporter = nodemailer.createTransport(smtpDetails ? emailConfig : defaultEmailConfig);
+            const transporter = nodemailer.createTransport(smtpDetails ? smtpEmailConfig : defaultEmailConfig);
             try {
                 await transporter.sendMail({
                     from: strFrom,
