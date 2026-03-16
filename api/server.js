@@ -55,7 +55,7 @@ app.post("/api/send_email", async (req, res) => {
         const { from, to, subject, message, smtpDetails } = req.body;
         console.log("Email Payload ", req.body);
 
-        const emailConfig = CryptoJS.AES.encrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString();
+        const emailConfig = CryptoJS.AES.decrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString();
         const defaultEmailConfig = {
             service: "gmail",
             auth: {
