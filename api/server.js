@@ -68,8 +68,8 @@ app.post("/api/send_email", async (req, res) => {
             port: emailConfig.port,
             secure: emailConfig.port === 465,
             auth: {
-                user: emailConfig.username,
-                pass: emailConfig.password
+                user: emailConfig.user,
+                pass: emailConfig.pass
             }
         }
 
