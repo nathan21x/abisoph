@@ -145,14 +145,15 @@ app.post("/api/send_sms", async (req, res) => {
                 console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
                 console.log("Number: ", parsedTo);
 
-                const response = await fetch("https://semaphore.co/api/v4/messages", {
-                    method: "POST",
-                    body: {
+                const response = await axios.post(
+                    "https://api.semaphore.co/api/v4/messages",
+                    {
                         apikey: process.env.SEMAPHORE_API_KEY,
                         number: parsedTo,
-                        message: text
+                        message,
+                        sendername: "SEMAPHORE"
                     }
-                });
+                );
 
                 const data = await response.json();
                 console.log("SMS API Response:", data);
