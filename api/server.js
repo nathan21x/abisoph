@@ -146,7 +146,7 @@ app.post("/api/send_sms", async (req, res) => {
                 const response = await fetch("https://semaphore.co/api/v4/messages", {
                     method: "POST",
                     body: JSON.stringify({
-                        api_key: process.env.SEMAPHORE_API_KEY,
+                        apiKey: process.env.SEMAPHORE_API_KEY,
                         number: parsedTo,
                         message: text
                     })
