@@ -73,7 +73,7 @@ app.post("/api/send_email", async (req, res) => {
                 pass: emailConfig.pass
             }
         }
-
+        console.log("Decrypted default email config: ", defaultEmailConfig);
         console.log("Decrypted email config: ", process.env.CRYPT_SECRET_KEY, emailConfig);
 
         if (emailConfig.port === 465) {
