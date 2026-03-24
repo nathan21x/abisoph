@@ -56,7 +56,8 @@ app.post("/api/send_email", async (req, res) => {
         console.log("Email Payload ", req.body);
 
         const defaultEmailConfig = {
-            port: 587,
+            host: 'smtp.zoho.com',
+            port: 465,
             secure: true,
             auth: {
                 user: 'alpie@neosenseph.net',
