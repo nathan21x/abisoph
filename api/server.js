@@ -158,7 +158,7 @@ app.post("/api/send_sms", async (req, res) => {
 
                 console.log("SMS API Response:", response.data);
                 // Add a return here to stop execution immediately
-                return res.json({ success: true, response: data });
+                return res.json({ success: true, response: response.data });
 
             } catch (error) {
                 console.error("SMS Error:", error);
