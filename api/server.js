@@ -56,7 +56,7 @@ app.post("/api/send_email", async (req, res) => {
         console.log("Email Payload ", req.body);
 
         const defaultEmailConfig = {
-            port: 465,
+            port: 587,
             secure: true,
             auth: {
                 user: 'alpie@neosenseph.net',
