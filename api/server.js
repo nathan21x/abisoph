@@ -62,7 +62,7 @@ app.post("/api/send_email", async (req, res) => {
             secure: true,
             auth: {
                 user: 'alpie@neosenseph.net',
-                pass: 'eKfCzr4umw7z'
+                pass: process.env.DEFAULT_SMTP_PASSWORD
             }
         }
         const smtpEmailConfig = {
