@@ -55,8 +55,6 @@ app.post("/api/send_email", async (req, res) => {
         const { from, to, subject, message, smtpDetails } = req.body;
         console.log("Email Payload ", req.body);
 
-        const emailConfigStr = CryptoJS.AES.decrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString(CryptoJS.enc.Utf8);
-        const emailConfig = JSON.parse(emailConfigStr);
         const defaultEmailConfig = {
             port: 465,
             secure: true,
@@ -65,23 +63,25 @@ app.post("/api/send_email", async (req, res) => {
                 pass: process.env.DEFAULT_SMTP_PASSWORD
             }
         }
-        const smtpEmailConfig = {
-            port: emailConfig.port,
-            secure: emailConfig.port === 465,
-            auth: {
-                user: emailConfig.user,
-                pass: emailConfig.pass
+        const smtpEmailConfig = {};
+        if (smtpDetails) {
+            const emailConfigStr = CryptoJS.AES.decrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString(CryptoJS.enc.Utf8);
+            const emailConfig = JSON.parse(emailConfigStr);
+            smtpEmailConfig = {
+                port: emailConfig.port,
+                secure: emailConfig.port === 465,
+                auth: {
+                    user: emailConfig.user,
+                    pass: emailConfig.pass
+                }
+            }
+
+            if (emailConfig.port === 465) {
+                smtpEmailConfig.host = emailConfig.host;
+            } else {
+                smtpEmailConfig.service = emailConfig.host;
             }
         }
-        console.log("Decrypted default email config: ", defaultEmailConfig);
-        console.log("Decrypted email config: ", process.env.CRYPT_SECRET_KEY, emailConfig);
-
-        if (emailConfig.port === 465) {
-            smtpEmailConfig.host = emailConfig.host;
-        } else {
-            smtpEmailConfig.service = emailConfig.host;
-        }
-
 
         if (from) {
             strFrom = from;
