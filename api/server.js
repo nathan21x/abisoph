@@ -150,7 +150,7 @@ app.post("/api/send_sms", async (req, res) => {
                     "https://api.semaphore.co/api/v4/messages",
                     {
                         apikey: process.env.SEMAPHORE_API_KEY,
-                        number: parsedTo,
+                        number: parsedTo.trim(),
                         message: text,
                         sendername: "SEMAPHORE"
                     }
