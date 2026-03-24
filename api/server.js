@@ -142,6 +142,8 @@ app.post("/api/send_sms", async (req, res) => {
                 //         message: text
                 //     })
                 // });
+                console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
+                console.log("Number: ", parsedTo);
 
                 const response = await fetch("https://semaphore.co/api/v4/messages", {
                     method: "POST",
