@@ -128,17 +128,26 @@ app.post("/api/send_sms", async (req, res) => {
 
         if (isPhilippineNumber(to)) {
             try {
-                const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
+                // const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
+                //     method: "POST",
+                //     headers: {
+                //         "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa",
+                //         "Content-Type": "application/json",
+                //         "Accept": "application/json"
+                //     },
+                //     body: JSON.stringify({
+                //         recipient: parsedTo,
+                //         sender_id: from,
+                //         type: "plain",
+                //         message: text
+                //     })
+                // });
+
+                const response = await fetch("https://semaphore.co/api/v4/messages", {
                     method: "POST",
-                    headers: {
-                        "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa",
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
                     body: JSON.stringify({
-                        recipient: parsedTo,
-                        sender_id: from,
-                        type: "plain",
+                        api_key: process.env.SEMAPHORE_API_KEY,
+                        number: parsedTo,
                         message: text
                     })
                 });
