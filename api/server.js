@@ -49,8 +49,8 @@ function isPhilippineNumber(number) {
 
 app.post("/api/send_email", async (req, res) => {
     try {
-        var strFrom = 'pangloginlangtlga@gmail.com';
-        var strSubject = 'Message from sVitae App';
+        var strFrom = 'noreply@neosenseph.net';
+        var strSubject = 'New Message from AbisoPH';
 
         const { from, to, subject, message, smtpDetails } = req.body;
         console.log("Email Payload ", req.body);
@@ -58,10 +58,11 @@ app.post("/api/send_email", async (req, res) => {
         const emailConfigStr = CryptoJS.AES.decrypt(smtpDetails, process.env.CRYPT_SECRET_KEY).toString(CryptoJS.enc.Utf8);
         const emailConfig = JSON.parse(emailConfigStr);
         const defaultEmailConfig = {
-            service: "gmail",
+            port: 465,
+            secure: true,
             auth: {
-                user: 'pangloginlangtlga@gmail.com',
-                pass: 'xohn ceob ftys lvkg'
+                user: 'alpie@neosenseph.net',
+                pass: 'eKfCzr4umw7z'
             }
         }
         const smtpEmailConfig = {
