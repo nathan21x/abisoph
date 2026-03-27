@@ -152,7 +152,7 @@ app.post("/api/send_sms", async (req, res) => {
                         apikey: process.env.SEMAPHORE_API_KEY,
                         number: parsedTo.trim(),
                         message: text,
-                        sendername: "SEMAPHORE"
+                        sendername: "AbisoPH"
                     }
                 );
 
