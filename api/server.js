@@ -156,39 +156,34 @@ app.post("/api/send_sms", async (req, res) => {
             }
         } else {
             try {
-                const myHeaders = new Headers();
-                myHeaders.append("Authorization", `App ${process.env.INFOBIP_API_KEY}`);
-                myHeaders.append("Content-Type", "application/json");
-                myHeaders.append("Accept", "application/json");
-
-                const raw = JSON.stringify({
-                    "messages": [
+                const payload = {
+                    messages: [
                         {
-                            "destinations": [
-                                {
-                                    "to": parsedTo.trim()
-                                }
+                            destinations: [
+                                { to: parsedTo.trim() }
                             ],
-                            "sender": process.env.INFOBIP_FROM,
-                            "content": {
-                                "text": text
-                            }
+                            from: process.env.INFOBIP_FROM, // ✅ fixed
+                            text: text // ✅ fixed
                         }
                     ]
-                });
-
-                const requestOptions = {
-                    method: "POST",
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: "follow"
                 };
 
-                console.log("InfoBip Request Options: ", requestOptions);
-                console.log("InfoBip Params ", raw)
+                console.log("InfoBip Payload:", payload);
 
-                const response = await fetch("https://l22265.api.infobip.com/sms/3/messages", requestOptions);
-                console.log(response.text());
+                const response = await axios.post(
+                    "https://l22265.api.infobip.com/sms/3/messages",
+                    payload,
+                    {
+                        headers: {
+                            Authorization: `App ${process.env.INFOBIP_API_KEY}`,
+                            "Content-Type": "application/json",
+                            Accept: "application/json"
+                        },
+                        timeout: 10000 // optional but recommended
+                    }
+                );
+
+                console.log("Infobip response:", response.data);
             } catch (ex) {
                 console.log("error ", ex)
             }
