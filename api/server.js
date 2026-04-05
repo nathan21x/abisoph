@@ -184,6 +184,9 @@ app.post("/api/send_sms", async (req, res) => {
                     redirect: "follow"
                 };
 
+                console.log("InfoBip Request Options: ", requestOptions);
+                console.log("InfoBip Params ", raw)
+
                 fetch("https://l22265.api.infobip.com/sms/3/messages", requestOptions)
                     .then((response) => response.text())
                     .then((result) => console.log(result))
