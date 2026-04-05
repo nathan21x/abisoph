@@ -129,20 +129,6 @@ app.post("/api/send_sms", async (req, res) => {
 
         if (isPhilippineNumber(to)) {
             try {
-                // const response = await fetch("https://dashboard.philsms.com/api/v3/sms/send", {
-                //     method: "POST",
-                //     headers: {
-                //         "Authorization": "Bearer 1806|8kY9M018bduoPT1tLqkWBd5ziPEsORNfsK8GpI9aa7d826aa",
-                //         "Content-Type": "application/json",
-                //         "Accept": "application/json"
-                //     },
-                //     body: JSON.stringify({
-                //         recipient: parsedTo,
-                //         sender_id: from,
-                //         type: "plain",
-                //         message: text
-                //     })
-                // });
                 console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
                 console.log("Number: ", parsedTo);
 
@@ -170,17 +156,42 @@ app.post("/api/send_sms", async (req, res) => {
             }
         } else {
             try {
-                await vonage.sms.send({ to, from, text })
-                    .then(resp => { console.log('Message sent successfully'); console.log(resp); })
-                    .catch(err => {
-                        console.log('There was an error sending the messages.', res);
-                    })
+                const myHeaders = new Headers();
+                myHeaders.append("Authorization", `App ${process.env.INFOBIP_API_KEY}`);
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Accept", "application/json");
+
+                const raw = JSON.stringify({
+                    "messages": [
+                        {
+                            "destinations": [
+                                {
+                                    "to": parsedTo.trim()
+                                }
+                            ],
+                            "sender": process.env.INFOBIP_FROM,
+                            "content": {
+                                "text": text
+                            }
+                        }
+                    ]
+                });
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow"
+                };
+
+                fetch("https://l22265.api.infobip.com/sms/3/messages", requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
             } catch (ex) {
                 console.log("error ", ex)
             }
         }
-
-
         res.json({ success: true, response: res });
     } catch (err) {
         res.status(500).json({ error: err.message });
