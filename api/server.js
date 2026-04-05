@@ -119,13 +119,18 @@ app.post("/api/send_email", async (req, res) => {
 })
 
 
+
 app.post("/api/send_sms", async (req, res) => {
     try {
         const { from, to, text } = req.body;
         console.log("SMS Payload ", req.body);
 
-        const parsedTo = to.replace("+", "").replace(/ /g, "");
+        var parsedTo = to.replace("+", "").replace(/ /g, "");
         console.log("Sending SMS to: ", parsedTo);
+
+        if (parsedTo.length === 11 && parsedTo.startsWith("1")) {
+            parsedTo = parsedTo.substring(1);
+        }
 
         try {
             console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
