@@ -124,70 +124,69 @@ app.post("/api/send_sms", async (req, res) => {
         const { from, to, text } = req.body;
         console.log("SMS Payload ", req.body);
 
-        const parsedTo = to.replace("+", "").replace(/ /g, "");
+        const parsedTo = to.replace(/ /g, "");
         console.log("Sending SMS to: ", parsedTo);
 
-        if (isPhilippineNumber(to)) {
-            try {
-                console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
-                console.log("Number: ", parsedTo);
+        try {
+            console.log("API Key: ", process.env.SEMAPHORE_API_KEY);
+            console.log("Number: ", parsedTo);
 
-                const response = await axios.post(
-                    "https://api.semaphore.co/api/v4/messages",
-                    {
-                        apikey: process.env.SEMAPHORE_API_KEY,
-                        number: parsedTo.trim(),
-                        message: text,
-                        sendername: "AbisoPH"
-                    }
-                );
-
-                console.log("SMS API Response:", response.data);
-                // Add a return here to stop execution immediately
-                return res.json({ success: true, response: response.data });
-
-            } catch (error) {
-                console.error("SMS Error:", error);
-
-                // Check if headers were already sent before sending an error response
-                if (!res.headersSent) {
-                    return res.status(500).json({ success: false, error: error.message });
+            const response = await axios.post(
+                "https://api.semaphore.co/api/v4/messages",
+                {
+                    apikey: process.env.SEMAPHORE_API_KEY,
+                    number: parsedTo.trim(),
+                    message: text,
+                    sendername: "AbisoPH"
                 }
-            }
-        } else {
-            try {
-                const payload = {
-                    messages: [
-                        {
-                            destinations: [
-                                { to: parsedTo.trim() }
-                            ],
-                            from: process.env.INFOBIP_FROM, // ✅ fixed
-                            text: text // ✅ fixed
-                        }
-                    ]
-                };
+            );
 
-                console.log("InfoBip Payload:", payload);
+            console.log("SMS API Response:", response.data);
+            // Add a return here to stop execution immediately
+            return res.json({ success: true, response: response.data });
 
-                const response = await axios.post(
-                    "https://l22265.api.infobip.com/sms/3/messages",
-                    payload,
-                    {
-                        headers: {
-                            Authorization: `App ${process.env.INFOBIP_API_KEY}`,
-                            "Content-Type": "application/json",
-                            Accept: "application/json"
-                        },
-                        timeout: 10000 // optional but recommended
-                    }
-                );
+        } catch (error) {
+            console.error("SMS Error:", error);
 
-                console.log("Infobip response:", response.data);
-            } catch (ex) {
-                console.log("error ", ex)
+            // Check if headers were already sent before sending an error response
+            if (!res.headersSent) {
+                return res.status(500).json({ success: false, error: error.message });
             }
         }
+        // else {
+        //     try {
+        //         const payload = {
+        //             messages: [
+        //                 {
+        //                     destinations: [
+        //                         { to: parsedTo.trim() }
+        //                     ],
+        //                     from: process.env.INFOBIP_FROM, // ✅ fixed
+        //                     text: text // ✅ fixed
+        //                 }
+        //             ]
+        //         };
+
+        //         console.log("InfoBip Payload:", payload);
+
+        //         const response = await axios.post(
+        //             "https://l22265.api.infobip.com/sms/3/messages",
+        //             payload,
+        //             {
+        //                 headers: {
+        //                     Authorization: `App ${process.env.INFOBIP_API_KEY}`,
+        //                     "Content-Type": "application/json",
+        //                     Accept: "application/json"
+        //                 },
+        //                 timeout: 10000 // optional but recommended
+        //             }
+        //         );
+
+        //         console.log("Infobip response:", response.data);
+        //     } catch (ex) {
+        //         console.log("error ", ex)
+        //     }
+        // }
         res.json({ success: true, response: res });
     } catch (err) {
         res.status(500).json({ error: err.message });
